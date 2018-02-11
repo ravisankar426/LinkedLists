@@ -474,5 +474,71 @@ namespace LinkedLists
         }
     }
 
+    public class Result
+    {
+        public Node tail;
+        public int length;
+        public Result(Node tail, int length)
+        {
+            this.tail = tail;
+            this.length = length;
+        }
+    }
+
+    public class Intersection
+    {
+        public Node GetIntersection(Node l1, Node l2)
+        {
+            Result result1 = GetTailAndLength(l1);
+            Result result2 = GetTailAndLength(l2);
+
+            if (result1.tail.data != result2.tail.data) return null;
+
+            Node shortest = result1.length > result2.length ? l2 : l1;
+            Node longest = result1.length < result2.length ? l2 : l1;
+
+
+
+            longest = GetNthNode(longest, Math.Abs(result1.length - result2.length));
+
+            while (longest.data != shortest.data)
+            {
+                longest = longest.next;
+                shortest = shortest.next;
+
+            }
+
+            return longest;
+        }
+
+        public Result GetTailAndLength(Node l1)
+        {
+            if (l1 == null) return new Result(null, 0);
+            if (l1.next == null) return new Result(l1, 1);
+            int length = 1;
+
+            while (l1.next != null)
+            {
+                l1 = l1.next;
+                length++;
+            }
+
+            return new Result(l1, length);
+        }
+
+        public Node GetNthNode(Node head, int n)
+        {
+            if (head == null) return null;
+            int k = 1;
+            while (k <= n)
+            {
+                head = head.next;
+                k++;
+            }
+
+            return head;
+        }
+    }
+
 
 }
