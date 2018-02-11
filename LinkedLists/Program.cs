@@ -39,11 +39,11 @@ namespace LinkedLists
 
         public static void CreateLinkedList()
         {
-            LinkedList.Append(10);
-            LinkedList.Append(20);
-            LinkedList.Append(30);
-            LinkedList.Append(30);
-            LinkedList.Append(40);
+            LinkedList.Append(LinkedList.Head,10);
+            LinkedList.Append(LinkedList.Head,20);
+            LinkedList.Append(LinkedList.Head, 30);
+            LinkedList.Append(LinkedList.Head, 30);
+            LinkedList.Append(LinkedList.Head, 40);
         }
 
     }
@@ -60,24 +60,113 @@ namespace LinkedLists
         }
     }
 
+    public class SumNode
+    {
+        public Node result = null;
+        public int sum;
+        public static Node resultList;
+        public int carry = 0;
+    }
+
+    public class SumParent
+    {
+        public Node SumCaller(Node l1, Node l2)
+        {
+            int lenL1 = GetListLength(l1);
+            int lenL2 = GetListLength(l2);
+            if (lenL1 < lenL2)
+            {
+                l1 = PadLeft(l1, lenL2 - lenL1);
+            }
+            else
+            {
+                l2 = PadLeft(l2, lenL1 - lenL2);
+            }
+
+            SumNode sum = AddLists(l1, l2);
+
+            if (sum.carry == 0) return sum.result;
+            else
+            {
+                sum.result = Prepend(sum.result, sum.carry);
+
+                return sum.result;
+            }
+        }
+
+        public SumNode AddLists(Node l1, Node l2)
+        {
+            if (l1 == null && l2 == null)
+            {
+                return new SumNode();
+            }
+
+            SumNode sum = AddLists(l1.next, l2.next);
+
+            int value = l1.data + l2.data + sum.carry;
+
+            sum.carry = value / 10;
+            sum.result = Prepend(sum.result, value % 10);
+
+            return sum;
+        }
+
+        public int GetListLength(Node n)
+        {
+            if (n == null) return 0;
+            if (n.next == null) return 1;
+            Node current = n;
+            int length = 0;
+            while (current != null)
+            {
+                current = current.next;
+                length++;
+            }
+            return length;
+        }
+
+        public Node PadLeft(Node n, int p)
+        {
+            Node newNode;
+            for (int i = 0; i < p; i++)
+            {
+                newNode = new Node(0);
+                newNode.next = n;
+                n = newNode;
+            }
+            return n;
+        }
+
+        public Node Prepend(Node n, int data)
+        {
+            Node newNode = new Node(data);
+            newNode.next = n;
+            n = newNode;
+            return n;
+        }
+    }
+
     public class LinkedList
     {
         public static Node Head;
 
-        public static void Append(int data)
+        public static Node Append(Node node,int data)
         {
-            if (Head == null)
+
+            if (node == null)
             {
-               Head = new Node(data);
+               node = new Node(data);
             }
             else
             {
-                var currentNode = LinkedList.Head;
+                var currentNode = node;
                 while (currentNode.next != null) {
                     currentNode = currentNode.next;
                 }
                 currentNode.next = new Node(data);
-            }            
+            }
+
+            return node;
         }
 
         public static void Prepend(int data)
@@ -206,6 +295,25 @@ namespace LinkedLists
             return index;
         }
 
+        public static int PrintKthNodeFromEndTwoPointer(Node head, int k)
+        {
+            Node p1 = head;
+            Node p2 = head;
+
+            for (int i = 0; i < k; i++)
+            {
+                p1 = p1.next;
+            }
+
+            while (p1 != null)
+            {
+                p1 = p1.next;
+                p2 = p2.next;
+            }
+
+            return p2.data;
+        }
+
         public static bool IsLinkedListPalindrome(Node head)
         {
             Node slow = head;
@@ -258,5 +366,113 @@ namespace LinkedLists
 
             LinkedList.Head = newList;
         }
+
+        // To partition the nodes based on a value
+        public static Node Partition(Node node, int x)
+        {
+            Node beforeStart = null;
+            Node beforeEnd = null;
+            Node afterStart = null;
+            Node afterEnd = null;
+
+            while (node != null)
+            {
+                Node newNode = new Node(node.data);
+                if (node.data < x)
+                {
+                    if (beforeStart == null)
+                    {
+                        beforeStart = newNode;
+                        beforeEnd = beforeStart;
+                    }
+                    else
+                    {
+                        beforeEnd.next = newNode;
+                        beforeEnd = newNode;
+                    }
+                }
+                else
+                {
+                    if (afterStart == null)
+                    {
+                        afterStart = newNode;
+                        afterEnd = afterStart;
+                    }
+                    else
+                    {
+                        afterEnd.next = newNode;
+                        afterEnd = newNode;
+                    }
+                }
+
+                node = node.next;
+            }
+
+            if (beforeStart == null)
+                return afterStart;
+
+            beforeEnd.next = afterStart;
+            return beforeStart;
+        }
+
+        //To partition the nodes based on a value order not mentioned
+        public static Node PartitionOrderNotMentioned(Node node, int x)
+        {
+            Node head = null;
+            Node tail = null;
+
+            while (node != null)
+            {
+                Node newNode = new Node(node.data);
+                if (node.data < x)
+                {
+                    newNode.next = head;
+                    head = newNode;
+                    if (tail == null)
+                    {
+                        tail = head;
+                    }
+                }
+                else
+                {
+                    tail.next = newNode;
+                    tail = newNode;
+                    if (head == null)
+                    {
+                        head = tail;
+                    }
+                }
+                node = node.next;
+            }
+
+            tail.next = null;
+
+            return head;
+        }
+
+        public static SumNode SumOfLinkedListReverse(Node l1, Node l2, int carry)
+        {
+            if (l1 == null && l2 == null && carry == 0) return null;
+
+            SumNode resultNode = new SumNode();
+            int value = 0;
+
+            if (l1 != null)
+                value += l1.data;
+            if (l2 != null)
+                value += l2.data;
+            value += carry;
+
+            resultNode.result = new Node(value);
+            resultNode.sum = value % 10;
+
+            SumOfLinkedListReverse(l1 == null ? null : l1.next, l2 == null ? null : l2.next, value >= 10 ? 1 : 0);
+            SumNode.resultList = LinkedList.Append(SumNode.resultList, resultNode.sum);
+
+            resultNode.result = SumNode.resultList;
+            return resultNode;
+        }
     }
+
+
 }
