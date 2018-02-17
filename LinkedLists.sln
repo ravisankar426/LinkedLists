@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortingTechniques", "Sortin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{42A64141-72ED-4786-8B1A-2DAE8B39EA8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LRU", "LRU\LRU.csproj", "{7543C1CF-DAB4-483C-B2E4-5DC81E947AD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{42A64141-72ED-4786-8B1A-2DAE8B39EA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42A64141-72ED-4786-8B1A-2DAE8B39EA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42A64141-72ED-4786-8B1A-2DAE8B39EA8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7543C1CF-DAB4-483C-B2E4-5DC81E947AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7543C1CF-DAB4-483C-B2E4-5DC81E947AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7543C1CF-DAB4-483C-B2E4-5DC81E947AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7543C1CF-DAB4-483C-B2E4-5DC81E947AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

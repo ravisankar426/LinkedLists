@@ -18,7 +18,8 @@ namespace Test
             //parent.SumCaller(LinkedList.l1, LinkedList.l2);
 
             Intersection intersection = new Intersection();
-            Node intersect=intersection.GetIntersection(LinkedList.l1,LinkedList.l2);
+            //Node intersect=intersection.GetIntersection(LinkedList.l1,LinkedList.l2);
+            Node collide = intersection.Collide(LinkedList.Head);
 
             Console.Read();
 
@@ -149,13 +150,26 @@ namespace Test
 
         public static void CreateLinkedList()
         {
-            LinkedList.Append(LinkedList.Head,3);
-            LinkedList.Append(LinkedList.Head, 5);
-            LinkedList.Append(LinkedList.Head, 8);
-            LinkedList.Append(LinkedList.Head, 5);
-            LinkedList.Append(LinkedList.Head, 10);
-            LinkedList.Append(LinkedList.Head, 2);
-            LinkedList.Append(LinkedList.Head, 1);
+            LinkedList.Head=LinkedList.Append(LinkedList.Head,3);
+            LinkedList.Head = LinkedList.Append(LinkedList.Head, 5);
+            LinkedList.Head = LinkedList.Append(LinkedList.Head, 8);
+            LinkedList.Head = LinkedList.Append(LinkedList.Head, 5);
+            LinkedList.Head = LinkedList.Append(LinkedList.Head, 10);
+            LinkedList.Head = LinkedList.Append(LinkedList.Head, 2);
+            LinkedList.Head = LinkedList.Append(LinkedList.Head, 1);
+
+            Node tail = LinkedList.Head;
+            Node collide = null;
+            int counter = 0;
+
+            while (tail.next!=null) {
+                tail = tail.next;
+                counter++;
+                if (counter == 2)
+                    collide = tail;
+            }
+
+            tail.next = collide;
 
             LinkedList.l1=LinkedList.Append(LinkedList.l1,1);
             LinkedList.l1=LinkedList.Append(LinkedList.l1, 2);
@@ -361,6 +375,32 @@ namespace Test
             }
 
             return head;
+        }
+
+        public Node Collide(Node head)
+        {
+            Node slow = head;
+            Node fast = head;
+
+            while (fast != null && fast.next != null)
+            {
+                slow = slow.next;
+                fast = fast.next.next;
+                if (fast == slow)
+                    break;
+            }
+
+            if (fast == null || fast.next == null)
+                return null;
+
+            slow = head;
+            while (slow != fast)
+            {
+                slow = slow.next;
+                fast = fast.next;
+            }
+
+            return fast;
         }
     }
 }
