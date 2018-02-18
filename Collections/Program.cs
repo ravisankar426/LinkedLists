@@ -10,30 +10,45 @@ namespace Collections
     {
         static void Main(string[] args)
         {
-            Stack.CreateDummyStack();
-            Console.WriteLine("******** This is Dummy Stack *************");
-            Stack.DisplayStack(Stack.Top);
+            //Stack.CreateDummyStack();
+            //Console.WriteLine("******** This is Dummy Stack *************");
+            //Stack.DisplayStack(Stack.Top);
 
-            Stack.Pop();
-            Console.WriteLine("******** After 1st Pop *************");
-            Stack.DisplayStack(Stack.Top);
+            //Stack.Pop();
+            //Console.WriteLine("******** After 1st Pop *************");
+            //Stack.DisplayStack(Stack.Top);
 
-            Stack.Push(100);
-            Console.WriteLine("******** After another push *************");
-            Stack.DisplayStack(Stack.Top);
+            //Stack.Push(100);
+            //Console.WriteLine("******** After another push *************");
+            //Stack.DisplayStack(Stack.Top);
 
 
-            Queue.CreateDummyQueue();
-            Console.WriteLine("******** This is Dummy Queue *************");
-            Queue.DisplayQueue(Queue.Head);
+            //Queue.CreateDummyQueue();
+            //Console.WriteLine("******** This is Dummy Queue *************");
+            //Queue.DisplayQueue(Queue.Head);
 
-            Queue.Deque();
-            Console.WriteLine("******** After 1st Dequeue *************");
-            Queue.DisplayQueue(Queue.Head);
+            //Queue.Deque();
+            //Console.WriteLine("******** After 1st Dequeue *************");
+            //Queue.DisplayQueue(Queue.Head);
 
-            Queue.Enque(100);
-            Console.WriteLine("******** After another Enqueue *************");
-            Queue.DisplayQueue(Queue.Head);
+            //Queue.Enque(100);
+            //Console.WriteLine("******** After another Enqueue *************");
+            //Queue.DisplayQueue(Queue.Head);
+
+
+            StackWithMin stackWithMin = new StackWithMin();
+            stackWithMin.push(5);
+            stackWithMin.push(6);
+            stackWithMin.push(3);
+            stackWithMin.push(7);
+
+            stackWithMin.pop();
+            int min = stackWithMin.Min();
+            stackWithMin.pop();
+            min = stackWithMin.Min();
+
+            Console.WriteLine(min.ToString());
+
 
             Console.Read();
         }
@@ -89,6 +104,40 @@ namespace Collections
             Stack.Push(30);
             Stack.Push(40);
             Stack.Push(50);
+        }
+    }
+
+    public class StackWithMin : Stack<int>
+    {
+        Stack<int> s;
+
+        public StackWithMin()
+        {
+            s = new Stack<int>();
+        }
+
+        public void push(int value)
+        {
+            if (value <= Min())
+                s.Push(value);
+            base.Push(value);
+        }
+
+        public int pop()
+        {
+            int value = base.Pop();
+            if (value == Min())
+                s.Pop();
+
+            return value;
+        }
+
+        public int Min()
+        {
+            if (s.Count == 0)
+                return int.MaxValue;
+            else
+                return s.Peek();
         }
     }
 
