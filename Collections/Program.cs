@@ -36,19 +36,32 @@ namespace Collections
             //Queue.DisplayQueue(Queue.Head);
 
 
-            StackWithMin stackWithMin = new StackWithMin();
-            stackWithMin.push(5);
-            stackWithMin.push(6);
-            stackWithMin.push(3);
-            stackWithMin.push(7);
+            //StackWithMin stackWithMin = new StackWithMin();
+            //stackWithMin.push(5);
+            //stackWithMin.push(6);
+            //stackWithMin.push(3);
+            //stackWithMin.push(7);
 
-            stackWithMin.pop();
-            int min = stackWithMin.Min();
-            stackWithMin.pop();
-            min = stackWithMin.Min();
+            //stackWithMin.pop();
+            //int min = stackWithMin.Min();
+            //stackWithMin.pop();
+            //min = stackWithMin.Min();
 
-            Console.WriteLine(min.ToString());
+            //Console.WriteLine(min.ToString());
 
+            MultiStackFixed multiStackFixed = new MultiStackFixed(3);
+
+            multiStackFixed.Push(1,1);
+            multiStackFixed.Push(1, 2);
+            multiStackFixed.Push(1, 3);
+            multiStackFixed.Push(2, 4);
+            multiStackFixed.Push(2, 5);
+            multiStackFixed.Push(2, 6);
+            multiStackFixed.Push(3, 7);
+            multiStackFixed.Push(3, 8);
+            multiStackFixed.Push(3, 9);
+            multiStackFixed.Pop(2);
+            multiStackFixed.Push(2, 6);
 
             Console.Read();
         }
@@ -197,6 +210,65 @@ namespace Collections
             Queue.Enque(30);
             Queue.Enque(40);
             Queue.Enque(50);
+        }
+    }
+
+    public class MultiStackFixed
+    {
+        public int numberOfStacks = 3;
+        public int[] sizes;
+        public int[] values;
+        public int capacity;
+
+        public MultiStackFixed(int stackSize)
+        {
+            capacity = stackSize;
+            values = new int[capacity * numberOfStacks];
+            sizes = new int[numberOfStacks];
+        }
+
+        public void Push(int stackNum, int value)
+        {
+            if (!IsStackFull(stackNum))
+            {
+                values[IndexOfTop(stackNum) + 1] = value;
+                sizes[stackNum - 1]++;
+            }
+            else
+            {
+                Console.WriteLine("The stack - "+stackNum.ToString()+" is Full");
+            }
+        }
+
+        public int Pop(int stackNum)
+        {
+            if (!IsStackEmpty(stackNum))
+            {
+                int value = values[IndexOfTop(stackNum)];
+                sizes[stackNum - 1]--;
+                return value;
+            }
+            else
+            {
+                Console.WriteLine("The stack - " + stackNum.ToString() + " is Empry");
+                return 0;
+            }
+        }
+
+        public int IndexOfTop(int stackNum)
+        {
+            int offset = (stackNum - 1) * capacity;
+            return offset + sizes[stackNum - 1] - 1;
+        }
+
+        public bool IsStackFull(int stackNum)
+        {
+            return sizes[stackNum - 1] == capacity;
+        }
+
+        public bool IsStackEmpty(int stackNum)
+        {
+            return sizes[stackNum - 1] == 0;
         }
     }
 }
