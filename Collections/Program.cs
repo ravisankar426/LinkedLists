@@ -49,19 +49,33 @@ namespace Collections
 
             //Console.WriteLine(min.ToString());
 
-            MultiStackFixed multiStackFixed = new MultiStackFixed(3);
+            //MultiStackFixed multiStackFixed = new MultiStackFixed(3);
 
-            multiStackFixed.Push(1,1);
-            multiStackFixed.Push(1, 2);
-            multiStackFixed.Push(1, 3);
-            multiStackFixed.Push(2, 4);
-            multiStackFixed.Push(2, 5);
-            multiStackFixed.Push(2, 6);
-            multiStackFixed.Push(3, 7);
-            multiStackFixed.Push(3, 8);
-            multiStackFixed.Push(3, 9);
-            multiStackFixed.Pop(2);
-            multiStackFixed.Push(2, 6);
+            //multiStackFixed.Push(1,1);
+            //multiStackFixed.Push(1, 2);
+            //multiStackFixed.Push(1, 3);
+            //multiStackFixed.Push(2, 4);
+            //multiStackFixed.Push(2, 5);
+            //multiStackFixed.Push(2, 6);
+            //multiStackFixed.Push(3, 7);
+            //multiStackFixed.Push(3, 8);
+            //multiStackFixed.Push(3, 9);
+            //multiStackFixed.Pop(2);
+            //multiStackFixed.Push(2, 6);
+
+            Stack stack = new Stack();
+            Stack<int> s = new Stack<int>();
+            s.Push(5);
+            s.Push(3);
+            s.Push(15);
+            s.Push(9);
+            s.Push(4);
+            s=stack.SortStack(s);
+
+            while (s.Count > 0)
+            {
+                Console.WriteLine(s.Pop().ToString());
+            }
 
             Console.Read();
         }
@@ -117,6 +131,28 @@ namespace Collections
             Stack.Push(30);
             Stack.Push(40);
             Stack.Push(50);
+        }
+
+        public Stack<int> SortStack(Stack<int> s)
+        {
+            Stack<int> r = new Stack<int>();
+
+            while (s.Count > 0)
+            {
+                int temp = s.Pop();
+                while (r.Count > 0 && r.Peek() > temp)
+                {
+                    s.Push(r.Pop());
+                }
+                r.Push(temp);
+            }
+
+            while (r.Count > 0)
+            {
+                s.Push(r.Pop());
+            }
+
+            return s;
         }
     }
 
