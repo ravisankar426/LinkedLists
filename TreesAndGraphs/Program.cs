@@ -13,6 +13,15 @@ namespace TreesAndGraphs
             int[] arr = new int[] { 1,2,3,4,5,6,7};
             MinimalBinaryTree bTree = new MinimalBinaryTree();
             TreeNode node = bTree.CreateMinimalBinaryTree(arr, 0, arr.Length - 1);
+
+
+            Graph g = new Graph(10);
+
+            g=g.CreateDummyGraph(g);
+
+            Console.WriteLine(g.IsPathExists(g, new Graph(60)));
+
+            Console.Read();
         }
     }
 
@@ -24,6 +33,76 @@ namespace TreesAndGraphs
 
         public TreeNode(int data) {
             this.data = data;
+        }
+    }
+
+    public class Graph
+    {
+        int data;
+        State state;
+        Graph[] adjacentNodes;
+
+        public Graph(int data) {
+            this.data = data;
+            this.state = State.Unvisited;
+        }
+
+        public Graph CreateDummyGraph(Graph g) {
+            List<Graph> adjacentNodes = new List<Graph>();
+
+            Graph a = new Graph(20);
+            Graph b = new Graph(30);
+            Graph c = new Graph(40);
+            Graph d = new Graph(50);
+            Graph e = new Graph(60);
+
+            adjacentNodes.Add(a);
+            adjacentNodes.Add(b);
+            adjacentNodes.Add(c);
+
+            g.adjacentNodes = adjacentNodes.ToArray();
+
+            c.adjacentNodes = new Graph[] { d };
+            d.adjacentNodes = new Graph[] { e};
+            e.adjacentNodes = new Graph[] { b};
+
+
+            return g;
+        }
+
+        enum State { Visited,Unvisited,Visiting};
+
+        public bool IsPathExists(Graph g, Graph b)
+        {
+
+            Queue<Graph> q = new Queue<Graph>();
+            g.state = State.Unvisited;
+            q.Enqueue(g);
+
+            Graph u;
+            while (q.Count > 0)
+            {
+                u = q.Dequeue();
+                if (u != null && u.adjacentNodes != null)
+                {
+                    foreach (var t in u.adjacentNodes)
+                    {
+                        if (t.state == State.Unvisited)
+                        {
+                            if (t.data == b.data) return true;
+                            else
+                            {
+                                t.state = State.Visiting;
+                                q.Enqueue(t);
+                            }
+                        }
+                    }
+                }
+                u.state = State.Visited;
+            }
+
+            return false;
+
         }
     }
 
