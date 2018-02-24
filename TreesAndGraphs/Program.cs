@@ -71,6 +71,7 @@ namespace TreesAndGraphs
             if (!CheckBSTMinMax(root.left, min, root.data) || !CheckBSTMinMax(root.right, root.data, max))
                 return false;
             return true;
+
         }
 
         public TreeNode(int data) {
