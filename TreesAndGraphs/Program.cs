@@ -30,7 +30,7 @@ namespace TreesAndGraphs
 
             //Console.WriteLine(root.GetHeight(root)!=int.MinValue);
 
-            Console.WriteLine(root.CheckBST(root));
+            Console.WriteLine(root.CheckBSTMinMax(root,-1,-1));
 
             Console.Read();
         }
@@ -59,6 +59,18 @@ namespace TreesAndGraphs
 
             return true;
 
+        }
+
+        public bool CheckBSTMinMax(TreeNode root,int min,int max) {
+
+            if (root == null) return true;
+
+            if ((min != -1 && root.data <= min) || (max!=-1 && root.data>max))
+                return false;
+
+            if (!CheckBSTMinMax(root.left, min, root.data) || !CheckBSTMinMax(root.right, root.data, max))
+                return false;
+            return true;
         }
 
         public TreeNode(int data) {
