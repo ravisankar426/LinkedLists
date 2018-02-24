@@ -10,16 +10,27 @@ namespace TreesAndGraphs
     {
         static void Main(string[] args)
         {
-            int[] arr = new int[] { 1,2,3,4,5,6,7};
-            MinimalBinaryTree bTree = new MinimalBinaryTree();
-            TreeNode node = bTree.CreateMinimalBinaryTree(arr, 0, arr.Length - 1);
+            //int[] arr = new int[] { 1,2,3,4,5,6,7};
+            //MinimalBinaryTree bTree = new MinimalBinaryTree();
+            //TreeNode node = bTree.CreateMinimalBinaryTree(arr, 0, arr.Length - 1);
 
 
-            Graph g = new Graph(10);
+            //Graph g = new Graph(10);
 
-            g=g.CreateDummyGraph(g);
+            //g=g.CreateDummyGraph(g);
 
-            Console.WriteLine(g.IsPathExists(g, new Graph(60)));
+            //Console.WriteLine(g.IsPathExists(g, new Graph(60)));
+
+            TreeNode root = new TreeNode(100);
+            List<List<TreeNode>> lists = new List<List<TreeNode>>();
+
+            root = root.CreateDummyTree(root);
+            //lists=root.CreateListLevels(root, lists, 0);
+            //lists = root.CreateListsLevelIterative(root);
+
+            //Console.WriteLine(root.GetHeight(root)!=int.MinValue);
+
+            Console.WriteLine(root.CheckBST(root));
 
             Console.Read();
         }
@@ -30,9 +41,119 @@ namespace TreesAndGraphs
         public int data;
         public TreeNode left;
         public TreeNode right;
+        int last_print = -1;
+
+
+        public bool CheckBST(TreeNode root)
+        {
+            if (root == null) return true;
+
+            if (!CheckBST(root.left)) return false;
+
+            if (last_print != -1 && root.data <= last_print)
+                return false;
+
+            last_print = root.data;
+
+            if (!CheckBST(root.right)) return false;
+
+            return true;
+
+        }
 
         public TreeNode(int data) {
             this.data = data;
+        }
+
+        public List<List<TreeNode>> CreateListLevels(TreeNode root,List<List<TreeNode>> lists,int level) {
+
+            if (root == null) return null;
+
+            List<TreeNode> list = null;
+
+            if (lists.Count == level)
+            {
+                list = new List<TreeNode>();
+                lists.Add(list);
+            }
+            else {
+                list = lists.ElementAt(level);
+            }
+
+            list.Add(root);
+
+            root.CreateListLevels(root.left,lists,level+1);
+            root.CreateListLevels(root.right, lists, level + 1);
+
+
+
+            return lists;
+        }
+
+        public List<List<TreeNode>> CreateListsLevelIterative(TreeNode root)
+        {
+            if (root == null) return new List<List<TreeNode>>();
+
+            List<List<TreeNode>> result = new List<List<TreeNode>>();
+            List<TreeNode> current = new List<TreeNode>();
+            current.Add(root);
+
+            while (current.Count > 0)
+            {
+                result.Add(current);
+                List<TreeNode> parents = current;
+                current = new List<TreeNode>();
+                foreach (var parent in parents)
+                {
+                    if (parent.left != null)
+                    {
+                        current.Add(parent.left);
+                    }
+                    if (parent.right != null)
+                    {
+                        current.Add(parent.right);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public int GetHeight(TreeNode root)
+        {
+            if (root == null) return -1;
+
+            int leftHeight = GetHeight(root.left);
+            if (leftHeight == int.MinValue) return int.MinValue;
+
+            int rightHeight = GetHeight(root.right);
+            if (rightHeight == int.MinValue) return int.MinValue;
+
+
+            int height = leftHeight - rightHeight;
+
+            if (Math.Abs(height) > 1)
+                return int.MinValue;
+            else
+                return Math.Max(leftHeight, rightHeight) + 1;
+        }
+
+        public TreeNode CreateDummyTree(TreeNode root) {
+            TreeNode a = new TreeNode(50);
+            TreeNode b = new TreeNode(150);
+            TreeNode c = new TreeNode(35);
+            TreeNode d = new TreeNode(55);
+            TreeNode e = new TreeNode(125);
+            TreeNode f = new TreeNode(185);
+
+            root.left = a;
+            root.right = b;
+            a.left = c;
+            a.right = d;
+            b.left = e;
+            b.right = f;
+
+            return root;
         }
     }
 
