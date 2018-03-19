@@ -21,16 +21,25 @@ namespace TreesAndGraphs
 
             //Console.WriteLine(g.IsPathExists(g, new Graph(60)));
 
-            TreeNode root = new TreeNode(100);
-            List<List<TreeNode>> lists = new List<List<TreeNode>>();
+            //TreeNode root = new TreeNode(100);
+            //List<List<TreeNode>> lists = new List<List<TreeNode>>();
 
-            root = root.CreateDummyTree(root);
+            //root = root.CreateDummyTree(root);
             //lists=root.CreateListLevels(root, lists, 0);
             //lists = root.CreateListsLevelIterative(root);
 
             //Console.WriteLine(root.GetHeight(root)!=int.MinValue);
 
-            Console.WriteLine(root.CheckBSTMinMax(root,-1,-1));
+            //Console.WriteLine(root.CheckBSTMinMax(root,-1,-1));
+
+            MinHeap minHeap = new MinHeap();
+            minHeap.items =new int[]{ 10,20,30,40,50};
+            minHeap.Add(45);
+            minHeap.Add(55);
+            minHeap.Add(25);
+
+            for (int i = 0; i < minHeap.items.Length; i++)
+                Console.WriteLine(minHeap.items[i].ToString());
 
             Console.Read();
         }
@@ -254,6 +263,129 @@ namespace TreesAndGraphs
 
             return node;
 
+        }
+    }
+
+    public class MinHeap
+    {
+        public int capacity;
+        public int size;
+
+        public int[] items;
+
+        public MinHeap()
+        {
+            items = new int[5];
+            capacity = 5;
+            size = 5;
+        }
+
+        public int GetParentIndex(int index)
+        {
+            return (index - 2) / 2;
+        }
+        public int GetLeftIndex(int index)
+        {
+            return (index * 2) + 1;
+        }
+        public int GetRightIndex(int index)
+        {
+            return (index * 2) + 2;
+        }
+        public bool HasLeftIndex(int index)
+        {
+            return (index * 2) + 1 < size;
+        }
+        public bool HasRightIndex(int index)
+        {
+            return (index * 2) + 2 < size;
+        }
+        public bool HasParent(int index)
+        {
+            return index > 0;
+        }
+
+        public void EnsureCapacity()
+        {
+            if (size == capacity)
+            {
+                Array.Resize<int>(ref items, capacity * 2);
+                capacity = capacity * 2;
+            }
+        }
+
+        public int Peek()
+        {
+            if (items.Length == 0) throw new Exception("The queue is Empty");
+            return items[0];
+        }
+
+        public int Poll()
+        {
+            if (items.Length == 0) throw new Exception("The queue is Empty");
+            int item = items[0];
+            items[0] = items[size - 1];
+            size--;
+            HeapifyDown();
+            return item;
+        }
+
+        public void Add(int data)
+        {
+            if (items.Length == 0) throw new Exception("The queue is not initialized");
+            if (size == capacity)
+            {
+                EnsureCapacity();
+            }
+            size++;
+            items[size - 1] = data;
+            HeapifyUp();
+        }
+
+        public void HeapifyUp()
+        {
+            int index = size - 1;
+            while (HasParent(index))
+            {
+                if (items[index] < items[GetParentIndex(index)])
+                {
+                    Swap(index, GetParentIndex(index));
+                    index = GetParentIndex(index);
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+        public void HeapifyDown()
+        {
+            int index = 0;
+            while (HasLeftIndex(index))
+            {
+                int smallerChildIndex = GetLeftIndex(index);
+                if (HasRightIndex(index) && items[smallerChildIndex] > items[GetRightIndex(index)])
+                {
+                    smallerChildIndex = GetRightIndex(index);
+                }
+
+                if (items[index] > items[smallerChildIndex])
+                {
+                    Swap(index, smallerChildIndex);
+                    index = smallerChildIndex;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        public void Swap(int a, int b)
+        {
+            int temp = items[a];
+            items[a] = items[b];
+            items[b] = temp;
         }
     }
 
