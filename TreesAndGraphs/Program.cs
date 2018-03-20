@@ -32,15 +32,24 @@ namespace TreesAndGraphs
 
             //Console.WriteLine(root.CheckBSTMinMax(root,-1,-1));
 
-            MinHeap minHeap = new MinHeap();
-            minHeap.items =new int[]{ 10,20,30,40,50};
-            minHeap.Add(45);
-            minHeap.Add(55);
-            minHeap.Add(25);
+            //MinHeap minHeap = new MinHeap();
+            //minHeap.items =new int[]{ 10,20,30,40,50};
+            //minHeap.Add(45);
+            //minHeap.Add(55);
+            //minHeap.Add(25);
 
-            for (int i = 0; i < minHeap.items.Length; i++)
-                Console.WriteLine(minHeap.items[i].ToString());
+            //for (int i = 0; i < minHeap.items.Length; i++)
+            //    Console.WriteLine(minHeap.items[i].ToString());
 
+            MaxHeap maxHeap = new MaxHeap();
+            List<Heap> heap = maxHeap.CreateDummyHeap();
+
+            maxHeap.Add(new Heap(60));
+            maxHeap.Add(new Heap(70));
+
+            for (int i = 0; i < maxHeap.maxHeap.Count; i++) {
+                Console.WriteLine(maxHeap.maxHeap[i].priority);
+            }
             Console.Read();
         }
     }
@@ -386,6 +395,134 @@ namespace TreesAndGraphs
             int temp = items[a];
             items[a] = items[b];
             items[b] = temp;
+        }
+    }
+
+    public class MaxHeap {
+        public List<Heap> maxHeap;
+
+        public MaxHeap() {
+            maxHeap = new List<Heap>();
+        }
+
+        public List<Heap> CreateDummyHeap() {
+            Heap a = new Heap(50);
+            Heap b = new Heap(40);
+            Heap c = new Heap(30);
+            Heap d = new Heap(20);
+            Heap e = new Heap(10);
+
+            maxHeap.Add(a);
+            maxHeap.Add(b);
+            maxHeap.Add(c);
+            maxHeap.Add(d);
+            maxHeap.Add(e);
+            return maxHeap;
+        }
+
+        public int GetLeftIndex(int index) {
+            return (index * 2) + 1;
+        }
+        public int GetRightIndex(int index)
+        {
+            return (index * 2) + 2;
+        }
+        public int GetParentIndex(int index)
+        {
+            return (index - 2) / 2;
+        }
+        public bool HasParent(int index) {
+            return (index > 0);
+        }
+        public bool HasRightChild(int index)
+        {
+            return ((index *2)+2)<maxHeap.Count;
+        }
+        public bool HasLeftChild(int index)
+        {
+            return ((index * 2) + 1) < maxHeap.Count;
+        }
+
+        public void Swap(int a, int b) {
+            Heap temp = maxHeap[a];
+            maxHeap[a] = maxHeap[b];
+            maxHeap[b] = temp;
+        }
+
+        public Heap Peek() {
+            return maxHeap[0];
+        }
+
+        public void Add(Heap heap) {
+            if (maxHeap.Count == 0) throw new Exception("The Heap is Empty");
+            maxHeap.Add(heap);
+            HeapifyUp();
+        }
+
+        public Heap Poll() {
+            if (maxHeap.Count == 0) throw new Exception("The Heap is Empty");
+            var heap = maxHeap[0];
+            maxHeap[0] = maxHeap[maxHeap.Count-1];
+            HeapifyDown();
+            return heap;
+        }
+
+        public void HeapifyUp() {
+            int index = maxHeap.Count-1;
+            while (HasParent(index)) {
+                if (maxHeap[index].priority > maxHeap[GetParentIndex(index+1)].priority)
+                {
+                    Swap(index,GetParentIndex(index+1));
+                    index = GetParentIndex(index+1);
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+        public void HeapifyDown()
+        {
+            int index = 0;
+            int largestIndex;
+            while (HasLeftChild(index)) {
+                largestIndex = GetLeftIndex(index);
+                if (HasRightChild(index) && maxHeap[largestIndex].priority < maxHeap[GetRightIndex(index)].priority) {
+                    largestIndex = GetRightIndex(index);
+                }
+
+                if (maxHeap[index].priority < maxHeap[largestIndex].priority)
+                {
+                    Swap(index, largestIndex);
+                    index = largestIndex;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+
+
+    }
+
+    public class Heap {
+        public string value;
+        public int priority;
+        public Heap() {
+        }
+        public Heap(string value)
+        {
+            this.value = value;
+        }
+        public Heap(int priority)
+        {
+            this.priority = priority;
+        }
+        public Heap(string value,int priority)
+        {
+            this.value = value;
+            this.priority = priority;
         }
     }
 
