@@ -17,14 +17,23 @@ namespace TreesAndGraphs
 
             //Graph g = new Graph(10);
 
-            //g=g.CreateDummyGraph(g);
+            //g = g.CreateDummyGraph(g);
 
             //Console.WriteLine(g.IsPathExists(g, new Graph(60)));
 
-            //TreeNode root = new TreeNode(100);
-            //List<List<TreeNode>> lists = new List<List<TreeNode>>();
+            TreeNode root = new TreeNode(100);
+            List<List<TreeNode>> lists = new List<List<TreeNode>>();
 
-            //root = root.CreateDummyTree(root);
+            root = root.CreateDummyTree(root);
+
+
+            int[,] inputs = new int[9, 2] { { 50, 40 }, { 150, 200 }, { 50, 130 }, { 165, 200 }, { 125, 185 }, { 25, 40 }, { 35, 55 }, { 35, 60 }, { 52, 52 } };
+
+            for (int i = 0; i < 9; i++)
+            {
+                var result = root.GetLeastCommonAncestor(root, new TreeNode(inputs[i,0]), new TreeNode(inputs[i, 1]));
+                Console.WriteLine("Least Common ancestor of "+ inputs[i, 0].ToString() + " and "+ inputs[i, 1].ToString() + " - " + result.data.ToString());
+            }
             //lists=root.CreateListLevels(root, lists, 0);
             //lists = root.CreateListsLevelIterative(root);
 
@@ -41,15 +50,17 @@ namespace TreesAndGraphs
             //for (int i = 0; i < minHeap.items.Length; i++)
             //    Console.WriteLine(minHeap.items[i].ToString());
 
-            MaxHeap maxHeap = new MaxHeap();
-            List<Heap> heap = maxHeap.CreateDummyHeap();
+            //MaxHeap maxHeap = new MaxHeap();
+            //List<Heap> heap = maxHeap.CreateDummyHeap();
 
-            maxHeap.Add(new Heap(60));
-            maxHeap.Add(new Heap(70));
+            //maxHeap.Add(new Heap(60));
+            //maxHeap.Add(new Heap(70));
 
-            for (int i = 0; i < maxHeap.maxHeap.Count; i++) {
-                Console.WriteLine(maxHeap.maxHeap[i].priority);
-            }
+            //for (int i = 0; i < maxHeap.maxHeap.Count; i++) {
+            //    Console.WriteLine(maxHeap.maxHeap[i].priority);
+            //}
+
+
             Console.Read();
         }
     }
@@ -176,6 +187,14 @@ namespace TreesAndGraphs
             TreeNode d = new TreeNode(55);
             TreeNode e = new TreeNode(125);
             TreeNode f = new TreeNode(185);
+            TreeNode g = new TreeNode(25);
+            TreeNode h = new TreeNode(40);
+            TreeNode i = new TreeNode(52);
+            TreeNode j = new TreeNode(60);
+            TreeNode k = new TreeNode(120);
+            TreeNode l = new TreeNode(130);
+            TreeNode m = new TreeNode(165);
+            TreeNode n = new TreeNode(200);
 
             root.left = a;
             root.right = b;
@@ -183,8 +202,53 @@ namespace TreesAndGraphs
             a.right = d;
             b.left = e;
             b.right = f;
+            c.left = g;
+            c.right = h;
+            d.left = i;
+            d.right = j;
+            e.left = k;
+            e.right = l;
+            f.left = m;
+            f.right = n;
 
             return root;
+        }
+
+        public TreeNode GetLeastCommonAncestor(TreeNode root,TreeNode a,TreeNode b) {
+
+            if (IsNodeExistsInBinaryTree(root, a) && IsNodeExistsInBinaryTree(root, b)) {
+                while (root != null)
+                {                    
+                    if(root.data > a.data && root.data > b.data)
+                        root = root.left;
+                    else if (root.data < a.data && root.data < b.data)
+                        root = root.right;
+                    else if ((root.data < a.data && root.data > b.data) || (root.data > a.data && root.data < b.data))
+                        return root;
+                    else if (root.data == a.data)
+                        return a;
+                    else if (root.data == b.data)
+                        return b;
+                }
+            }
+
+            return root;
+        }
+
+        public bool IsNodeExistsInBinaryTree(TreeNode root,TreeNode searchNode) {
+
+            if (root == null || searchNode==null) return false;
+
+            while (root != null) {
+                if (root.data > searchNode.data)
+                    root = root.left;
+                else if (root.data < searchNode.data)
+                    root = root.right;
+                else if(root.data == searchNode.data)
+                    return true;
+            }
+
+            return false;
         }
     }
 
