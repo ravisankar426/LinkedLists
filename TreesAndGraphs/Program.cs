@@ -10,6 +10,13 @@ namespace TreesAndGraphs
     {
         static void Main(string[] args)
         {
+            MinHeapLinkedList.Enqueue(new HeapNode(30).data);
+            MinHeapLinkedList.Enqueue(new HeapNode(20).data);
+            MinHeapLinkedList.Enqueue(new HeapNode(25).data);
+            MinHeapLinkedList.Enqueue(new HeapNode(15).data);
+            Console.WriteLine(MinHeapLinkedList.Dequeue().data.ToString());
+            MinHeapLinkedList.Enqueue(new HeapNode(12).data);
+            Console.WriteLine(MinHeapLinkedList.Dequeue().data.ToString());
             //int[] arr = new int[] { 1,2,3,4,5,6,7};
             //MinimalBinaryTree bTree = new MinimalBinaryTree();
             //TreeNode node = bTree.CreateMinimalBinaryTree(arr, 0, arr.Length - 1);
@@ -21,19 +28,19 @@ namespace TreesAndGraphs
 
             //Console.WriteLine(g.IsPathExists(g, new Graph(60)));
 
-            TreeNode root = new TreeNode(100);
-            List<List<TreeNode>> lists = new List<List<TreeNode>>();
+            //TreeNode root = new TreeNode(100);
+            //List<List<TreeNode>> lists = new List<List<TreeNode>>();
 
-            root = root.CreateDummyTree(root);
+            //root = root.CreateDummyTree(root);
 
 
-            int[,] inputs = new int[9, 2] { { 50, 40 }, { 150, 200 }, { 50, 130 }, { 165, 200 }, { 125, 185 }, { 25, 40 }, { 35, 55 }, { 35, 60 }, { 52, 52 } };
+            //int[,] inputs = new int[9, 2] { { 50, 40 }, { 150, 200 }, { 50, 130 }, { 165, 200 }, { 125, 185 }, { 25, 40 }, { 35, 55 }, { 35, 60 }, { 52, 52 } };
 
-            for (int i = 0; i < 9; i++)
-            {
-                var result = root.GetLeastCommonAncestor(root, new TreeNode(inputs[i,0]), new TreeNode(inputs[i, 1]));
-                Console.WriteLine("Least Common ancestor of "+ inputs[i, 0].ToString() + " and "+ inputs[i, 1].ToString() + " - " + result.data.ToString());
-            }
+            //for (int i = 0; i < 9; i++)
+            //{
+            //    var result = root.GetLeastCommonAncestor(root, new TreeNode(inputs[i,0]), new TreeNode(inputs[i, 1]));
+            //    Console.WriteLine("Least Common ancestor of "+ inputs[i, 0].ToString() + " and "+ inputs[i, 1].ToString() + " - " + result.data.ToString());
+            //}
             //lists=root.CreateListLevels(root, lists, 0);
             //lists = root.CreateListsLevelIterative(root);
 
@@ -590,6 +597,207 @@ namespace TreesAndGraphs
         }
     }
 
+    public class HeapNode
+    {
+        public int data;
+        public int index;
+        public HeapNode left;
+        public HeapNode right;
+        public HeapNode()
+        {
+        }
+        public HeapNode(int data) {
+            this.data = data;
+        }
+        public HeapNode(int data,int index)
+        {
+            this.data = data;
+            this.index = index;
+        }
+    }
+
+    public static class MinHeapLinkedList
+    {
+        static HeapNode root;
+
+        public static bool IsHeapEmpty()
+        {
+            if (root == null)
+                return true;
+            else
+                return false;
+        }
+
+        public static int GetParentIndex(int index)
+        {
+            return Math.Abs((index - 2) / 2);
+        }
+
+        public static int GetLeftIndex(int index)
+        {
+            return (index * 2) + 1;
+        }
+
+        public static int GetRightIndex(int index)
+        {
+            return (index * 2) + 2;
+        }
+
+        public static bool HasParent(HeapNode r)
+        {
+            if (r.index > 0)
+                return true;
+            else
+                return false;
+        }
+
+        public static HeapNode GetParentNode(HeapNode c)
+        {
+            int parentIndex = (c.index == 1 || c.index==2) ? 0 : ((c.index-1)/2);
+            var current = root;
+            Queue<HeapNode> q = new Queue<HeapNode>();
+            q.Enqueue(current);
+
+            while (q.Count > 0)
+            {
+                var p = q.Dequeue();
+                if (p != null && p.index == parentIndex)
+                    return p;
+
+                if (p.left != null)
+                    q.Enqueue(p.left);
+                if (p.right != null)
+                    q.Enqueue(p.right);
+            }
+
+            return null;
+
+        }
+
+        public static HeapNode GetLastNode(HeapNode r)
+        {
+            if (r == null)
+                return null;
+            Queue<HeapNode> q = new Queue<HeapNode>();
+            q.Enqueue(r);
+
+            while (q.Count > 0)
+            {
+                var current = q.Dequeue();
+                if (current.left == null || current.right == null)
+                    return current;
+                q.Enqueue(current.left);
+                q.Enqueue(current.right);
+            }
+
+            return null;
+        }
+
+        public static void HeapifyUp(HeapNode last)
+        {
+            var lastNode = last;
+            bool isNodeInPlace = false;
+
+            while (HasParent(lastNode) && !isNodeInPlace)
+            {
+                var parentNode = GetParentNode(lastNode);
+                if (parentNode.data > lastNode.data)
+                {
+                    var tempData = lastNode.data;
+                    lastNode.data = parentNode.data;
+                    parentNode.data = tempData;
+                    lastNode = parentNode;
+                }
+                else
+                {
+                    isNodeInPlace = true;
+                }
+            }
+        }
+
+        public static void HeapifyDown(HeapNode first)
+        {
+            var firstNode = first;
+            bool isNodeInPlace = false;
+
+            while ((firstNode.left != null) && !isNodeInPlace){
+                if (firstNode.data > firstNode.left.data)
+                {
+                    var tempData = firstNode.data;
+                    firstNode.data = firstNode.left.data;
+                    firstNode.left.data = tempData;
+                    firstNode = firstNode.left;
+                }
+                else if (firstNode.right != null && firstNode.data > firstNode.right.data)
+                {
+                    var tempData = firstNode.data;
+                    firstNode.data = firstNode.right.data;
+                    firstNode.right.data = tempData;
+                    firstNode = firstNode.right;
+                }
+                else
+                {
+                    isNodeInPlace = true;
+                }
+            }
+        }
+
+        public static void Enqueue(int data)
+        {
+            if (root == null)
+                root = new HeapNode(data, 0);
+            else
+            {
+                var lastNode = GetLastNode(root);
+
+                if (lastNode.left == null)
+                {
+                    lastNode.left = new HeapNode(data, GetLeftIndex(lastNode.index));
+                    HeapifyUp(lastNode.left);
+                }
+                else if(lastNode.right == null){
+                    lastNode.right = new HeapNode(data, GetRightIndex(lastNode.index));
+                    HeapifyUp(lastNode.right);
+                }
+            }
+
+        }
+
+        public static HeapNode Dequeue()
+        {
+            if (IsHeapEmpty()) throw new Exception("Heap is Empty");
+            var temp = root;
+            var lastNode = GetLastNode(root);
+            if (lastNode.left != null)
+                lastNode = lastNode.left;
+            var parentNode = GetParentNode(lastNode);
+
+            if (parentNode != null && lastNode != null)
+            {
+                if (GetLeftIndex(parentNode.index) == lastNode.index)
+                {
+                    parentNode.left = null;
+                }
+                else if (GetRightIndex(parentNode.index) == lastNode.index)
+                {
+                    parentNode.right = null;
+                }
+
+            }
+
+            lastNode.left = root.left;
+            lastNode.right = root.right;
+            lastNode.index = 0;
+            HeapifyDown(lastNode);
+            root = lastNode;
+
+            return temp;
+        }
+
+    }
+}
+
+
     //public class Traversals {
 
     //    // Depth first traversal
@@ -675,4 +883,4 @@ namespace TreesAndGraphs
     //        return false;
     //    }
     //}
-}
+
