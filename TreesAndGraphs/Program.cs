@@ -10,13 +10,13 @@ namespace TreesAndGraphs
     {
         static void Main(string[] args)
         {
-            MinHeapLinkedList.Enqueue(new HeapNode(30).data);
-            MinHeapLinkedList.Enqueue(new HeapNode(20).data);
-            MinHeapLinkedList.Enqueue(new HeapNode(25).data);
-            MinHeapLinkedList.Enqueue(new HeapNode(15).data);
-            Console.WriteLine(MinHeapLinkedList.Dequeue().data.ToString());
-            MinHeapLinkedList.Enqueue(new HeapNode(12).data);
-            Console.WriteLine(MinHeapLinkedList.Dequeue().data.ToString());
+            //MinHeapLinkedList.Enqueue(new HeapNode(30).data);
+            //MinHeapLinkedList.Enqueue(new HeapNode(20).data);
+            //MinHeapLinkedList.Enqueue(new HeapNode(25).data);
+            //MinHeapLinkedList.Enqueue(new HeapNode(15).data);
+            //Console.WriteLine(MinHeapLinkedList.Dequeue().data.ToString());
+            //MinHeapLinkedList.Enqueue(new HeapNode(12).data);
+            //Console.WriteLine(MinHeapLinkedList.Dequeue().data.ToString());
             //int[] arr = new int[] { 1,2,3,4,5,6,7};
             //MinimalBinaryTree bTree = new MinimalBinaryTree();
             //TreeNode node = bTree.CreateMinimalBinaryTree(arr, 0, arr.Length - 1);
@@ -28,10 +28,11 @@ namespace TreesAndGraphs
 
             //Console.WriteLine(g.IsPathExists(g, new Graph(60)));
 
-            //TreeNode root = new TreeNode(100);
+            TreeNode root = new TreeNode(100);
             //List<List<TreeNode>> lists = new List<List<TreeNode>>();
 
-            //root = root.CreateDummyTree(root);
+            root = root.CreateDummyTree(root);
+            root.DepthFirstTraversal(root);
 
 
             //int[,] inputs = new int[9, 2] { { 50, 40 }, { 150, 200 }, { 50, 130 }, { 165, 200 }, { 125, 185 }, { 25, 40 }, { 35, 55 }, { 35, 60 }, { 52, 52 } };
@@ -72,12 +73,18 @@ namespace TreesAndGraphs
         }
     }
 
+    public enum State
+    {
+        UnVisited,
+        Visited
+    }
 
     public class TreeNode {
         public int data;
         public TreeNode left;
         public TreeNode right;
         int last_print = -1;
+        State state;
 
 
         public bool CheckBST(TreeNode root)
@@ -112,6 +119,7 @@ namespace TreesAndGraphs
 
         public TreeNode(int data) {
             this.data = data;
+            this.state = State.UnVisited;
         }
 
         public List<List<TreeNode>> CreateListLevels(TreeNode root,List<List<TreeNode>> lists,int level) {
@@ -256,6 +264,45 @@ namespace TreesAndGraphs
             }
 
             return false;
+        }
+
+
+        public void DepthFirstTraversal(TreeNode root)
+        {
+            var q = root;
+            bool loop = true;
+            Stack<TreeNode> s = new Stack<TreeNode>();
+            s.Push(q);
+            Console.WriteLine(q.data.ToString());
+            while (loop)
+            {
+                while (q.left != null && q.left.state != State.Visited)
+                {
+                    s.Push(q.left);
+                    Console.WriteLine(q.left.data.ToString());
+                    q.left.state = State.Visited;
+                    q = q.left;
+                }
+
+                //if (s.Count > 0)
+                //    q = s.Pop();
+
+                while (q.right != null && q.right.state != State.Visited)
+                {
+                    s.Push(q.right);
+                    Console.WriteLine(q.right.data.ToString());
+                    q.right.state = State.Visited;
+                    q = q.right;
+                }
+
+                if (s.Count > 0)
+                {
+                    q = s.Pop();
+                }
+                else {
+                    loop = false;
+                }
+            }
         }
     }
 
