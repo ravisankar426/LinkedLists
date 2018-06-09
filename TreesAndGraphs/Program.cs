@@ -32,7 +32,8 @@ namespace TreesAndGraphs
             //List<List<TreeNode>> lists = new List<List<TreeNode>>();
 
             root = root.CreateDummyTree(root);
-            root.DepthFirstTraversal(root);
+            //root.DepthFirstTraversal(root);
+            root.LevelLists(root);
 
 
             //int[,] inputs = new int[9, 2] { { 50, 40 }, { 150, 200 }, { 50, 130 }, { 165, 200 }, { 125, 185 }, { 25, 40 }, { 35, 55 }, { 35, 60 }, { 52, 52 } };
@@ -83,6 +84,7 @@ namespace TreesAndGraphs
         public int data;
         public TreeNode left;
         public TreeNode right;
+        public TreeNode next;
         int last_print = -1;
         State state;
 
@@ -270,39 +272,112 @@ namespace TreesAndGraphs
         public void DepthFirstTraversal(TreeNode root)
         {
             var q = root;
-            bool loop = true;
             Stack<TreeNode> s = new Stack<TreeNode>();
             s.Push(q);
             Console.WriteLine(q.data.ToString());
-            while (loop)
+            
+            while ((q.left!=null && q.left.state != State.UnVisited) || (q.right!=null  && q.right.state!=State.UnVisited) || s.Count>0)
             {
-                while (q.left != null && q.left.state != State.Visited)
+                if (q.left != null && q.left.state != State.Visited)
                 {
-                    s.Push(q.left);
-                    Console.WriteLine(q.left.data.ToString());
                     q.left.state = State.Visited;
+                    Console.WriteLine(q.left.data.ToString());
+                    s.Push(q.left);
                     q = q.left;
                 }
-
-                //if (s.Count > 0)
-                //    q = s.Pop();
-
-                while (q.right != null && q.right.state != State.Visited)
+                else if (q.right != null && q.right.state != State.Visited)
                 {
-                    s.Push(q.right);
+                    q.right.state = State.UnVisited;
                     Console.WriteLine(q.right.data.ToString());
-                    q.right.state = State.Visited;
+                    s.Push(q.right);
                     q = q.right;
                 }
-
-                if (s.Count > 0)
+                else
                 {
                     q = s.Pop();
                 }
-                else {
-                    loop = false;
+            }
+        }
+
+        public void LevelLists(TreeNode root)
+        {
+            if (root == null)
+                return;
+
+            var q = root;
+            Dictionary<int,TreeNode> levels = new Dictionary<int,TreeNode>();
+            Stack<TreeNode> s = new Stack<TreeNode>();
+            int level = 0;
+
+            s.Push(q);
+            levels.Add(level, q);
+
+            while ((q.left != null && q.left.state != State.UnVisited) || (q.right != null && q.right.state != State.UnVisited) || s.Count > 0)
+            {
+                if (q.left != null && q.left.state != State.Visited)
+                {
+                    q.left.state = State.Visited;
+                    if (!levels.ContainsKey(level + 1))
+                        levels.Add(level + 1, q.left);
+                    else
+                        AddAtEnd(levels[level+1],q.left);
+                    q = q.left;
+                    s.Push(q);
+                    level++;
+                    if (q.left != null || q.right!=null)
+                    {
+                    }
+                }
+                else if (q.right != null && q.right.state != State.Visited)
+                {                    
+                    q.right.state = State.Visited;
+                    if (!levels.ContainsKey(level+1))
+                        levels.Add(level+1,q.right);
+                    else
+                        AddAtEnd(levels[level+1], q.right);
+                    q = q.right;
+                    s.Push(q);
+                    if (q.left != null || q.right != null)
+                    {
+                        level++;
+                    }
+                }
+                else
+                {
+                    q = s.Pop();
+                    level--;
+                    if (s.Count>0 && ((q.left == null || (q.left != null && q.left.state == State.Visited)) || (q.right == null || (q.right != null && q.right.state == State.Visited))))
+                    {
+                        q = s.Pop();
+                    }
+                    if (q == root)
+                        level = 0;
                 }
             }
+
+            foreach (var key in levels.Keys)
+                DisplayList(levels[key]);
+        }
+
+        public static void AddAtEnd(TreeNode root,TreeNode newNode)
+        {
+            while (root.next != null)
+            {
+                root = root.next;
+            }
+            root.next = newNode;
+        }
+
+        public static void DisplayList(TreeNode root)
+        {
+            StringBuilder builder = new StringBuilder();
+            var current = root;
+            while(current!=null)
+            {
+                builder.Append($"{current.data.ToString()} -> ");
+                current = current.next;
+            }
+            Console.WriteLine(builder.ToString());   
         }
     }
 
