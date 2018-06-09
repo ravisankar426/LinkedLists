@@ -324,9 +324,6 @@ namespace TreesAndGraphs
                     q = q.left;
                     s.Push(q);
                     level++;
-                    if (q.left != null || q.right!=null)
-                    {
-                    }
                 }
                 else if (q.right != null && q.right.state != State.Visited)
                 {                    
